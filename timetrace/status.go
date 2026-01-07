@@ -58,8 +58,21 @@ func CheckStatus() (string, error) {
 		return "off", nil
 	}
 
+	tag := ""
+loop:
+	for _, t := range record.Tags {
+		switch t {
+		case "coding":
+			tag = " (c)"
+			break loop
+		case "meeting":
+			tag = " (m)"
+			break loop
+		}
+	}
+
 	duration := time.Since(record.Start)
-	status := fmt.Sprintf("%s - %02d:%02d", record.Project.Key, int(duration.Hours()), int(duration.Minutes())%60)
+	status := fmt.Sprintf("%s%s - %02d:%02d", record.Project.Key, tag, int(duration.Hours()), int(duration.Minutes())%60)
 
 	return status, nil
 }
